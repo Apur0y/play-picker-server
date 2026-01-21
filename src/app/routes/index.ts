@@ -7,6 +7,8 @@ import {
 	updatePackageController,
 	deletePackageController,
 } from "../modules/packages/package.controler";
+import * as SportsController from "../modules/sports/sports.controler";
+
 
 export const router = Router();
 
@@ -24,3 +26,11 @@ router.get("/packages", getPackages);
 router.get("/packages/:id", getPackage);
 router.put("/packages/:id", updatePackageController);
 router.delete("/packages/:id", deletePackageController);
+
+//Sports routed
+router.post("/sports", SportsController.createSports);
+router.get("/sports", SportsController.getAllSports);
+router.get("/sports/:id", SportsController.getSingleSports);
+router.patch("/sports/:id", SportsController.updateSports);
+router.delete("/sports/:id", SportsController.deleteSports);
+router.patch("/sports/reorder", SportsController.reorderSports);
