@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Sports, SportsDocument } from "./sports.model";
 
 
@@ -67,10 +68,36 @@ export const updateSports = async (
   id: string,
   payload: Partial<SportsDocument>
 ) => {
-  return await Sports.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  });
+  // 🔹 Helper to extract src from iframe HTML
+  const extractIframeSrc = (value: string): string => {
+    if (!value) return "";
+    const match = value.match(/src="([^"]+)"/);
+    if (match && match[1]) {
+      return match[1];
+    }
+    return value; // already a clean link
+  };
+
+  try {
+    // 🔹 sanitize src if provided
+    const cleanPayload = { ...payload };
+    if (payload.src) {
+      cleanPayload.src = extractIframeSrc(payload.src);
+    }
+
+    const updated = await Sports.findByIdAndUpdate(id, cleanPayload, {
+      new: true, // return updated document
+      runValidators: true, // enforce schema validation
+    });
+
+    if (!updated) {
+      throw new Error("Sport not found");
+    }
+
+    return updated;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteSports = async (id: string) => {
@@ -82,7 +109,7 @@ export const reorderSports = async (
 ) => {
   const bulkOps = items.map((item) => ({
     updateOne: {
-      filter: { _id: item.id },
+      filter: { _id: new mongoose.Types.ObjectId(item.id) },
       update: { $set: { order: item.order } },
     },
   }));

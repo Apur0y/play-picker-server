@@ -31,6 +31,6 @@ router.delete("/packages/:id", deletePackageController);
 router.post("/sports", SportsController.createSports);
 router.get("/sports", SportsController.getAllSports);
 router.get("/sports/:id", SportsController.getSingleSports);
-router.patch("/sports/:id", SportsController.updateSports);
+router.put("/sports/:id", SportsController.updateSports);
 router.delete("/sports/:id", SportsController.deleteSports);
 router.patch("/sports/reorder", SportsController.reorderSports);
