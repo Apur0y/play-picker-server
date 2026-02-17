@@ -19,6 +19,7 @@ app.use(cors({
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1",router)
 

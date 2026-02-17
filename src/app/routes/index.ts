@@ -8,6 +8,7 @@ import {
 	deletePackageController,
 } from "../modules/packages/package.controler";
 import * as SportsController from "../modules/sports/sports.controler";
+import { paymentRouter } from "../modules/payment/payment.routes";
 
 
 export const router = Router();
@@ -34,3 +35,5 @@ router.get("/sports/:id", SportsController.getSingleSports);
 router.put("/sports/:id", SportsController.updateSports);
 router.delete("/sports/:id", SportsController.deleteSports);
 router.patch("/sports/reorder", SportsController.reorderSports);
+// Payment routes (SSLCommerz)
+router.use("/payment", paymentRouter);
