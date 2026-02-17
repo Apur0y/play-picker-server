@@ -45,17 +45,17 @@ paymentRouter.get("/success", paymentController.paymentSuccess);
 **File:** `src/app/modules/payment/payment.service.ts`
 
 **Problem:**
-- Success URL was configured as `${envVars.APP_URL}/payment/success` but the actual route is `/api/v1/payment/success`
+- Success URL was configured as `${envVars.SERVER_URL}/payment/success` but the actual route is `/api/v1/payment/success`
 - This inconsistency prevented SSLCommerz from reaching the correct callback endpoints
 
 **Fix:**
 Updated all callback URLs in the `initiatePaymentService()` function:
 
 ```typescript
-success_url: `${envVars.APP_URL}/api/v1/payment/success`,  // ✅ Corrected
-fail_url: `${envVars.APP_URL}/api/v1/payment/fail`,        // ✅ Corrected
-cancel_url: `${envVars.APP_URL}/api/v1/payment/cancel`,    // ✅ Corrected
-ipn_url: `${envVars.APP_URL}/api/v1/payment/ipn`,          // ✅ Already correct
+success_url: `${envVars.SERVER_URL}/api/v1/payment/success`,  // ✅ Corrected
+fail_url: `${envVars.SERVER_URL}/api/v1/payment/fail`,        // ✅ Corrected
+cancel_url: `${envVars.SERVER_URL}/api/v1/payment/cancel`,    // ✅ Corrected
+ipn_url: `${envVars.SERVER_URL}/api/v1/payment/ipn`,          // ✅ Already correct
 ```
 
 ---
@@ -139,7 +139,7 @@ res.redirect(`${envVars.FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
 Before deploying, verify these steps:
 
 - [ ] Set `FRONTEND_URL` environment variable (e.g., `http://localhost:3000` for dev)
-- [ ] Set `APP_URL` environment variable (e.g., `http://localhost:5000` for dev)
+- [ ] Set `SERVER_URL` environment variable (e.g., `http://localhost:5000` for dev)
 - [ ] Initiate a test payment via `/api/v1/payment/initiate`
 - [ ] Verify redirect to SSLCommerz gateway
 - [ ] Complete payment in SSLCommerz sandbox
@@ -154,7 +154,7 @@ Before deploying, verify these steps:
 
 ```env
 # Application URLs
-APP_URL=http://localhost:5000
+SERVER_URL=http://localhost:5000
 FRONTEND_URL=http://localhost:3000
 
 # SSLCommerz Configuration

@@ -29,7 +29,7 @@ SSL_STORE_ID=playp6992e46d93627
 SSL_STORE_PASSWORD=playp6992e46d93627@ssl
 SSL_SESSION_API=https://sandbox.sslcommerz.com/gwprocess/v4/api.php
 SSL_VALIDATION_API=https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
-APP_URL=https://playpicker.vercel.app
+SERVER_URL=https://playpicker.vercel.app
 PORT=3000
 ```
 

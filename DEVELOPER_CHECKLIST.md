@@ -108,7 +108,7 @@ This checklist helps verify that the payment system is properly implemented and 
 - [x] SSL_STORE_PASSWORD
 - [x] SSL_SESSION_API
 - [x] SSL_VALIDATION_API
-- [x] APP_URL
+- [x] SERVER_URL
 - [x] DB_URL
 - [x] NODE_ENV
 - [x] PORT (optional with default)
@@ -280,7 +280,7 @@ This checklist helps verify that the payment system is properly implemented and 
 - [ ] API endpoints switched to production URLs
   - [ ] Session API to securepay.sslcommerz.com
   - [ ] Validation API to securepay.sslcommerz.com
-- [ ] APP_URL updated to production domain
+- [ ] SERVER_URL updated to production domain
 - [ ] NODE_ENV set to "production"
 
 ### Production Deployment

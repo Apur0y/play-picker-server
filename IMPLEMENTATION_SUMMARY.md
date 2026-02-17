@@ -24,7 +24,7 @@ src/app/modules/payment/
   - SSL_STORE_PASSWORD
   - SSL_SESSION_API
   - SSL_VALIDATION_API
-  - APP_URL
+  - SERVER_URL
 
 ### ✅ API Routes Integration
 - **routes/index.ts**: Integrated payment router with prefix `/api/payment`
@@ -122,7 +122,7 @@ SSL_STORE_ID=playp6992e46d93627
 SSL_STORE_PASSWORD=playp6992e46d93627@ssl
 SSL_SESSION_API=https://sandbox.sslcommerz.com/gwprocess/v4/api.php
 SSL_VALIDATION_API=https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php
-APP_URL=https://playpicker.vercel.app
+SERVER_URL=https://playpicker.vercel.app
 
 # Other Required Variables
 DB_URL=your_mongodb_connection_string
@@ -197,7 +197,7 @@ Before going to production:
 - [ ] Change SSL_VALIDATION_API to production URL
   - From: `https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php`
   - To: `https://securepay.sslcommerz.com/validator/api/validationserverAPI.php`
-- [ ] Update APP_URL to production domain
+- [ ] Update SERVER_URL to production domain
 - [ ] Setup proper error logging
 - [ ] Add admin authentication middleware
 - [ ] Implement rate limiting

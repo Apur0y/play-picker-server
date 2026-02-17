@@ -112,7 +112,7 @@ src/app/modules/payment/
 
 2. **src/app/config/env.ts**
    - Added: SSLCommerz configuration variables
-   - Added: APP_URL configuration
+   - Added: SERVER_URL configuration
 
 3. **src/app/routes/index.ts**
    - Added: Payment router integration

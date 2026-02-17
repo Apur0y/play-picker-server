@@ -356,7 +356,7 @@ Architecture Pattern:
 ├─ SSL_VALIDATION_API            │
 │   └─ Endpoint: Validate payment│
 │                                │
-├─ APP_URL                       │
+├─ SERVER_URL                       │
 │   └─ Used in: Callback URLs    │
 │       (success/fail/cancel)    │
 └────────────────────────────────┘
