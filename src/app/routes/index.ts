@@ -7,8 +7,8 @@ import { packageRoute } from "../modules/packages/package.routes";
 
 export const router = Router();
 
-router.use("/users",userRoutes)
-router.use("/sports",sportsRoutes)
+router.use("/users",userRoutes);
+router.use("/sports",sportsRoutes);
 router.use("/payment", paymentRoutes);
 router.use("/packages", packageRoute);
 
