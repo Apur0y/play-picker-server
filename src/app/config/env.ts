@@ -32,7 +32,7 @@ const loadEnvVariables=():EnvType=>{
     SSL_STORE_PASSWORD: process.env.SSL_STORE_PASSWORD!,
     SSL_SESSION_API: (process.env.SSL_SESSION_API || 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php') as string,
     SSL_VALIDATION_API: (process.env.SSL_VALIDATION_API || 'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php') as string,
-    SERVER_URL: (process.env.SERVER_URL || 'http://localhost:5000') as string,
+    SERVER_URL: (process.env.SERVER_URL || 'http://localhost:1000') as string,
     FRONTEND_URL: (process.env.FRONTEND_URL || 'http://localhost:3000') as string,
 }
 }

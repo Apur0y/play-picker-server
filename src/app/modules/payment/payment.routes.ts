@@ -20,8 +20,13 @@ paymentRouter.put("/:transactionId/status", paymentController.updatePaymentStatu
 // Payment statistics (Admin)
 paymentRouter.get("/stats/overview", paymentController.getPaymentStats);
 
-// Callback redirect endpoints (SSLCommerz redirects with GET)
+// Callback redirect endpoints (SSLCommerz supports both GET and POST)
+paymentRouter.get("/success", paymentController.paymentSuccess);
 paymentRouter.post("/success", paymentController.paymentSuccess);
 paymentRouter.get("/fail", paymentController.paymentFail);
+paymentRouter.post("/fail", paymentController.paymentFail);
 paymentRouter.get("/cancel", paymentController.paymentCancel);
+paymentRouter.post("/cancel", paymentController.paymentCancel);
+
+export const paymentRoutes = paymentRouter;
 

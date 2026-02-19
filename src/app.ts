@@ -32,3 +32,4 @@ app.get("/", (req: Request, res: Response) => {
 
 
   app.use(globalErrorHandler);
+  // module.exports = app;

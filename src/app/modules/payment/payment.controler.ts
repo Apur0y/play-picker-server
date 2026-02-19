@@ -251,6 +251,9 @@ export const paymentSuccess = async (
   try {
     // SSLCommerz sends data as query parameters
     const { tran_id, amount, val_id, status } = req.body;
+    console.log(req.body);
+    console.log(req.query);
+    console.log(req.method);
 
     if (!tran_id) {
       return res.redirect(
