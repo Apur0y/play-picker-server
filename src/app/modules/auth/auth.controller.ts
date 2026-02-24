@@ -68,6 +68,33 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const logout = catchAsync(async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  await AuthService.logoutUser(refreshToken);
+
+  // Clear cookies
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+
+  sendResponse(res, {
+    statusCode: status.OK,
+    message: "User logged out successfully!",
+    data: null,
+  });
+});
+
 const changePassword = catchAsync(async (req, res) => {
   const email = req.user?.email as string;
 
@@ -265,4 +292,5 @@ export const AuthController = {
   resendResetPassLink,
   resendVerificationLink,
   validateSession,
+  logout
 };

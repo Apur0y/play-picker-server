@@ -15,6 +15,7 @@ router.post(
   validateRequest(AuthValidation.loginValidationSchema),
   AuthController.login
 );
+router.post("/logout",AuthController.logout);
 
 router.put(
   "/change-password",

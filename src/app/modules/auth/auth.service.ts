@@ -72,6 +72,30 @@ const loginUser = async (email: string, password: string, req: Request) => {
   return { accessToken, refreshToken };
 };
 
+
+const logoutUser = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new ApiError(status.BAD_REQUEST, "No refresh token provided");
+  }
+
+  // Optional: verify refresh token first
+  const decoded = verifyToken(
+    refreshToken,
+    config.jwt.refresh.secret as string
+  );
+
+  if (!decoded) {
+    throw new ApiError(status.UNAUTHORIZED, "Invalid refresh token");
+  }
+
+  // If you store refreshToken in DB → remove it
+  await User.findByIdAndUpdate(decoded.userId, {
+    $unset: { refreshToken: "" },
+  });
+
+  return true;
+};
+
 const recordLogin = async (user: IUser, req: Request) => {
   // no database for login records yet - just log
   console.log("login event", { email: user.email, ip: req.ip });
@@ -320,4 +344,5 @@ export const AuthService = {
   verifyResetPassLink,
   resendResetPassLink,
   resendVerificationLink,
+  logoutUser
 };
