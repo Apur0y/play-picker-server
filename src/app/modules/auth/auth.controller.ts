@@ -42,17 +42,17 @@ const login = catchAsync(async (req, res) => {
 
   // ✅ SET BOTH TOKENS as HTTP-only cookies
   res.cookie("accessToken", accessToken, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: "/",
   });
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: "/",
   });
