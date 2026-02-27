@@ -8,7 +8,6 @@ let server: Server;
 const startServer = async () => {
   try {
     await mongoose.connect(envVars.DB_URL);
-    console.log("Connected To DB");
 
     server = app.listen(envVars.PORT, () => {
       console.log(`Server Runnig on port ${envVars.PORT}`);
