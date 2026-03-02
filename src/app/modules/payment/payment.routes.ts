@@ -8,7 +8,7 @@ paymentRouter.post("/initiate", paymentController.initiatePayment);
 
 // Payment validation and callback
 paymentRouter.post("/validate", paymentController.validatePayment);
-paymentRouter.post("/ipn", paymentController.handleIPN);
+// paymentRouter.post("/ipn", paymentController.handleIPN);
 
 // Payment details and history
 paymentRouter.get("/details/:transactionId", paymentController.getPaymentDetails);

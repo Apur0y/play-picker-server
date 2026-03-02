@@ -13,7 +13,7 @@ export const initiatePayment = async (
   next: NextFunction
 ) => {
   try {
-    const { userId, packageId, amount, customerName, customerEmail, customerPhone } =
+    const { userId, packageId, amount, customerName, customerEmail, customerPhone,instructions, footageUrls,deliveryTimeInDays,revisionCount,effects,additionalFeatures} =
       req.body;
 
     if (
@@ -36,7 +36,8 @@ export const initiatePayment = async (
       amount,
       customerName,
       customerEmail,
-      customerPhone
+      customerPhone,
+      instructions, footageUrls,deliveryTimeInDays,revisionCount,effects,additionalFeatures
     );
 
     res.status(200).json({
@@ -102,40 +103,40 @@ export const validatePayment = async (
  * IPN Endpoint (Instant Payment Notification)
  * POST /api/payment/ipn
  */
-export const handleIPN = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { tran_id, total_amount, status, val_id } = req.body;
+// export const handleIPN = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { tran_id, total_amount, status, val_id } = req.body;
 
-    if (!tran_id || !total_amount) {
-      throw new AppError(400, "Missing required fields in IPN");
-    }
+//     if (!tran_id || !total_amount) {
+//       throw new AppError(400, "Missing required fields in IPN");
+//     }
 
-    // Validate payment with SSLCommerz
-    const validationResult = await paymentService.validatePaymentService(
-      tran_id
-      // total_amount
-    );
+//     // Validate payment with SSLCommerz
+//     const validationResult = await paymentService.validatePaymentService(
+//       tran_id
+//       // total_amount
+//     );
 
-    if (validationResult.status === "VALID") {
-      // Confirm payment
-      await paymentService.confirmPaymentService(tran_id, validationResult);
-      res.status(200).json({
-        success: true,
-        message: "IPN processed successfully",
-      });
+//     if (validationResult.status === "VALID") {
+//       // Confirm payment
+//       await paymentService.confirmPaymentService(tran_id, validationResult);
+//       res.status(200).json({
+//         success: true,
+//         message: "IPN processed successfully",
+//       });
       
-    } else {
-      // Update payment as failed
-      await paymentService.updatePaymentStatusService(tran_id, "failed");
-      res.status(400).json({
-        success: false,
-        message: "Payment validation failed in IPN",
-      });
-    }
-  } catch (err) {
-    next(err);
-  }
-};
+//     } else {
+//       // Update payment as failed
+//       await paymentService.updatePaymentStatusService(tran_id, "failed");
+//       res.status(400).json({
+//         success: false,
+//         message: "Payment validation failed in IPN",
+//       });
+//     }
+//   } catch (err) {
+//     next(err);
+//   }
+// };
 
 /**
  * Get payment details
@@ -269,6 +270,8 @@ export const paymentSuccess = async (
       tran_id as string,
       validationResponse
     );
+
+    console.log("THis is the succeros",req.body);
 
     // 3️⃣ Client-side redirect to frontend success page
     return res.send(`

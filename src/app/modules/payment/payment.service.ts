@@ -9,6 +9,7 @@ import {
   ISSLCommerceResponse,
   IValidationResponse,
 } from "./payment.interface";
+import { Order } from "../order/order.model";
 
 /**
  * Generate unique transaction ID
@@ -26,7 +27,13 @@ export const initiatePaymentService = async (
   amount: number,
   customerName: string,
   customerEmail: string,
-  customerPhone: string
+  customerPhone: string,
+  instructions: string,
+  footageUrls: string[],
+  deliveryTimeInDays: number,
+  revisionCount: number,
+  effects: string,
+  additionalFeatures: string[],
 ): Promise<{
   url: string;
   transactionId: string;
@@ -34,7 +41,10 @@ export const initiatePaymentService = async (
 }> => {
   try {
     if (!userId || !packageId || !amount || amount <= 0) {
-      throw new AppError(400, "Invalid payment data: missing or invalid fields");
+      throw new AppError(
+        400,
+        "Invalid payment data: missing or invalid fields",
+      );
     }
 
     // Generate transaction ID
@@ -53,6 +63,23 @@ export const initiatePaymentService = async (
       status: "pending",
       paymentMethod: "SSLCommerz",
     };
+
+    const orderData = {
+      transactionId,
+      title: `Custom-${customerEmail}`,
+      instructions,
+      footageUrls,
+      deliveryTimeInDays,
+      revisionCount,
+      effects,
+      additionalFeatures,
+      totalPrice: amount,
+      status: "pending",
+      paymentStatus: "unpaid",
+      buyerId: userId,
+    };
+
+    await Order.create(orderData);
 
     const payment = await Payment.create(paymentData);
 
@@ -84,7 +111,7 @@ export const initiatePaymentService = async (
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
+      },
     );
 
     if (
@@ -94,7 +121,7 @@ export const initiatePaymentService = async (
     ) {
       throw new AppError(
         400,
-        response.data.status_message || "Failed to initiate payment session"
+        response.data.status_message || "Failed to initiate payment session",
       );
     }
 
@@ -110,7 +137,7 @@ export const initiatePaymentService = async (
     }
     throw new AppError(
       500,
-      error.message || "Failed to initiate payment with SSLCommerz"
+      error.message || "Failed to initiate payment with SSLCommerz",
     );
   }
 };
@@ -119,7 +146,7 @@ export const initiatePaymentService = async (
  * Validate payment from SSLCommerz IPN
  */
 export const validatePaymentService = async (
-  val_id: string
+  val_id: string,
 ): Promise<IValidationResponse> => {
   try {
     if (!val_id) {
@@ -135,25 +162,24 @@ export const validatePaymentService = async (
           store_passwd: envVars.SSL_STORE_PASSWORD,
           format: "json",
         },
-      }
+      },
     );
 
     return response.data;
   } catch (error: any) {
     throw new AppError(
       500,
-      error.response?.data?.error || error.message || "Validation failed"
+      error.response?.data?.error || error.message || "Validation failed",
     );
   }
 };
-
 
 /**
  * Handle payment confirmation (Called from IPN or callback)
  */
 export const confirmPaymentService = async (
   transactionId: string,
-  validationResponse: any
+  validationResponse: any,
 ): Promise<any> => {
   try {
     const payment = await Payment.findOne({ transactionId });
@@ -179,7 +205,10 @@ export const confirmPaymentService = async (
       payment.status = "failed";
       await payment.save();
 
-      throw new AppError(400, `Payment validation failed: ${validationResponse.status}`);
+      throw new AppError(
+        400,
+        `Payment validation failed: ${validationResponse.status}`,
+      );
     }
   } catch (error: any) {
     if (error instanceof AppError) {
@@ -192,7 +221,9 @@ export const confirmPaymentService = async (
 /**
  * Get payment details by transaction ID
  */
-export const getPaymentDetailsService = async (transactionId: string): Promise<any> => {
+export const getPaymentDetailsService = async (
+  transactionId: string,
+): Promise<any> => {
   try {
     if (!transactionId) {
       throw new AppError(400, "Transaction ID is required");
@@ -209,14 +240,19 @@ export const getPaymentDetailsService = async (transactionId: string): Promise<a
     if (error instanceof AppError) {
       throw error;
     }
-    throw new AppError(500, error.message || "Failed to retrieve payment details");
+    throw new AppError(
+      500,
+      error.message || "Failed to retrieve payment details",
+    );
   }
 };
 
 /**
  * Get all payments for a user
  */
-export const getUserPaymentsService = async (userId: string): Promise<any[]> => {
+export const getUserPaymentsService = async (
+  userId: string,
+): Promise<any[]> => {
   try {
     if (!userId) {
       throw new AppError(400, "User ID is required");
@@ -228,7 +264,10 @@ export const getUserPaymentsService = async (userId: string): Promise<any[]> => 
     if (error instanceof AppError) {
       throw error;
     }
-    throw new AppError(500, error.message || "Failed to retrieve user payments");
+    throw new AppError(
+      500,
+      error.message || "Failed to retrieve user payments",
+    );
   }
 };
 
@@ -237,7 +276,7 @@ export const getUserPaymentsService = async (userId: string): Promise<any[]> => 
  */
 export const updatePaymentStatusService = async (
   transactionId: string,
-  status: "pending" | "completed" | "failed" | "cancelled"
+  status: "pending" | "completed" | "failed" | "cancelled",
 ): Promise<any> => {
   try {
     if (!transactionId || !status) {
@@ -246,13 +285,16 @@ export const updatePaymentStatusService = async (
 
     const validStatuses = ["pending", "completed", "failed", "cancelled"];
     if (!validStatuses.includes(status)) {
-      throw new AppError(400, `Invalid status. Must be one of: ${validStatuses.join(", ")}`);
+      throw new AppError(
+        400,
+        `Invalid status. Must be one of: ${validStatuses.join(", ")}`,
+      );
     }
 
     const payment = await Payment.findOneAndUpdate(
       { transactionId },
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!payment) {
@@ -302,6 +344,9 @@ export const getPaymentStatsService = async (): Promise<any> => {
       breakdown: stats,
     };
   } catch (error: any) {
-    throw new AppError(500, error.message || "Failed to retrieve payment statistics");
+    throw new AppError(
+      500,
+      error.message || "Failed to retrieve payment statistics",
+    );
   }
 };
