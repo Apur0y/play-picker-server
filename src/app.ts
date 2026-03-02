@@ -19,15 +19,17 @@ app.use(cors({
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1",router)
 
 
 app.get("/", (req: Request, res: Response) => {
         res.status(200).json({
-             message: "Welcome to tour"
+             message: "Play picker in online"
         })
     }) 
 
 
   app.use(globalErrorHandler);
+  // module.exports = app;

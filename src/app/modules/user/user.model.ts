@@ -29,6 +29,13 @@ const userSchma = new Schema<IUser>({
         default: IsActive.ACTIVE,
     },
     isVerified: { type: Boolean, default: false },
+
+    // flags used for password reset flow
+    isResetPassword: { type: Boolean, default: false },
+    canResetPassword: { type: Boolean, default: false },
+    passwordChangedAt: { type: Date },
+    roleChangedAt: { type: Date },
+
     auths:[authProviderSchema]
 
 }, {

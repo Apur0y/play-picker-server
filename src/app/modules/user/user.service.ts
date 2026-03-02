@@ -1,6 +1,7 @@
 import { User } from "./user.model";
 import { IUser } from "./user.interface";
 import path from "path";
+import bcrypt from "bcrypt";
 
 /**
  * Create a new user
@@ -14,13 +15,24 @@ export const createUserService = async (payload: IUser) => {
     throw new Error("User with this email already exists.");
   }
 
-  // Create new user
-  const user = await User.create(payload);
+  if (!payload.password) {
+  throw new Error("Password is required");
+}
+  // Hash the password
+  const saltRounds = 10; // you can increase for more security (slower)
+  const hashedPassword = await bcrypt.hash(payload.password, saltRounds);
+
+  // Create new user with hashed password
+  const user = await User.create({
+    ...payload,
+    password: hashedPassword,
+  });
 
   // Exclude password from response
   const userWithoutPassword = await User.findById(user._id).select("-password");
   return userWithoutPassword;
 };
+
 
 export const getAllUsers=async()=>{
     
