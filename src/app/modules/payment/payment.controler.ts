@@ -249,23 +249,20 @@ export const paymentSuccess = async (
   next: NextFunction
 ) => {
   try {
-    // SSLCommerz sends data as query parameters
     const { tran_id, amount, val_id, status } = req.body;
-    console.log(req.body);
-    console.log(req.query);
-    console.log(req.method);
 
     if (!tran_id) {
-      return res.redirect(
-        `${envVars.FRONTEND_URL}/payment/fail?error=missing_transaction_id`
-      );
+      return res.send(`
+        <html><body><script>
+          window.location.replace("${envVars.FRONTEND_URL}/payment/fail?error=missing_transaction_id");
+        </script></body></html>
+      `);
     }
 
     // 1️⃣ Validate payment with SSLCommerz
     const validationResponse = await paymentService.validatePaymentService(
-  val_id as string
-);
-
+      val_id as string
+    );
 
     // 2️⃣ Confirm payment in database
     const confirmationResult = await paymentService.confirmPaymentService(
@@ -273,16 +270,20 @@ export const paymentSuccess = async (
       validationResponse
     );
 
-    // 3️⃣ Redirect to frontend success page
-    return res.redirect(
-      `${envVars.FRONTEND_URL}/payment/success?tran_id=${tran_id}&val_id=${val_id || ''}`
-    );
+    // 3️⃣ Client-side redirect to frontend success page
+    return res.send(`
+      <html><body><script>
+        window.location.replace("${envVars.FRONTEND_URL}/payment/success?tran_id=${tran_id}&val_id=${val_id || ''}");
+      </script></body></html>
+    `);
 
   } catch (err) {
     console.error("Payment success callback error:", err);
-    return res.redirect(
-      `${envVars.FRONTEND_URL}/payment/fail?error=validation_failed`
-    );
+    return res.send(`
+      <html><body><script>
+        window.location.replace("${envVars.FRONTEND_URL}/payment/fail?error=validation_failed");
+      </script></body></html>
+    `);
   }
 };
 
