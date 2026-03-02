@@ -5,6 +5,13 @@ import { IOrder } from "./order.inteface";
 
 const orderSchema = new Schema<IOrder>(
   {
+    transactionId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
     title: {
       type: String,
       required: true,

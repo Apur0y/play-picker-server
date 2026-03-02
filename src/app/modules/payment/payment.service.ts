@@ -183,9 +183,14 @@ export const confirmPaymentService = async (
 ): Promise<any> => {
   try {
     const payment = await Payment.findOne({ transactionId });
+    const order = await Order.findOne({ transactionId });
+   
 
-    if (!payment) {
+    if (!payment ) {
       throw new AppError(404, "Payment record not found");
+    }
+    if (!order ) {
+      throw new AppError(404, "Order record not found");
     }
 
     // Check if validation is successful
@@ -193,6 +198,9 @@ export const confirmPaymentService = async (
       // Update payment status to completed
       payment.status = "completed";
       await payment.save();
+      order.status = "completed";
+      order.paymentStatus="paid";
+      await order.save();
 
       return {
         success: true,
@@ -204,6 +212,8 @@ export const confirmPaymentService = async (
       // Mark payment as failed
       payment.status = "failed";
       await payment.save();
+      order.status = "cancelled";
+      await order.save();
 
       throw new AppError(
         400,

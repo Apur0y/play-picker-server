@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IOrder {
+  transactionId: string;
   title: string;
   instructions: string;
   footageUrls: string[];

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as paymentService from "./payment.service";
 import AppError from "../../errorHelpers/AppError";
 import { envVars } from "../../config/env";
+import { Order } from "../order/order.model";
 
 /**
  * Initiate payment endpoint
@@ -39,6 +40,7 @@ export const initiatePayment = async (
       customerPhone,
       instructions, footageUrls,deliveryTimeInDays,revisionCount,effects,additionalFeatures
     );
+   
 
     res.status(200).json({
       success: true,
@@ -77,6 +79,7 @@ export const validatePayment = async (
         tran_id,
         validationResult
       );
+      
 
       res.status(200).json({
         success: true,
@@ -271,8 +274,6 @@ export const paymentSuccess = async (
       validationResponse
     );
 
-    console.log("THis is the succeros",req.body);
-
     // 3️⃣ Client-side redirect to frontend success page
     return res.send(`
       <html><body><script>
@@ -314,6 +315,14 @@ export const paymentFail = async (
       tran_id as string,
       "failed"
     );
+    
+    // Also update order status to cancelled
+    await Order.findOneAndUpdate(
+      { transactionId: tran_id },
+      { status: "cancelled", paymentStatus: "unpaid" },
+      { new: true }
+    );
+    console.log("Payment and Order updated to failed/cancelled for transaction:", tran_id);
 
     // Redirect to frontend failure page
     return res.redirect(
@@ -350,6 +359,14 @@ export const paymentCancel = async (
       tran_id as string,
       "cancelled"
     );
+    
+    // Also update order status to cancelled
+    await Order.findOneAndUpdate(
+      { transactionId: tran_id },
+      { status: "cancelled", paymentStatus: "unpaid" },
+      { new: true }
+    );
+    console.log("Payment and Order updated to cancelled for transaction:", tran_id);
 
     // Redirect to frontend cancel page
     return res.redirect(
