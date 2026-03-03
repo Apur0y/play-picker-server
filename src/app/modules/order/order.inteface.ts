@@ -16,3 +16,5 @@ export interface IOrder {
   createdAt: Date;
   updatedAt: Date;
 }
+
+//orderId, Sports Name, DeliveryDate, OrderDate
