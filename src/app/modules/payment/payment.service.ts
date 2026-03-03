@@ -229,7 +229,7 @@ export const confirmPaymentService = async (
 };
 
 /**
- * Get payment details by transaction ID
+ * Get payment details by transaction IDs
  */
 export const getPaymentDetailsService = async (
   transactionId: string,
