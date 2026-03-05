@@ -1,4 +1,4 @@
-# SSLCommerz Payment System - Architecture & Flow Diagrams
+# SSLCommerz Payment System - Architecture & Flow Diagram
 
 ## System Architecture
 
