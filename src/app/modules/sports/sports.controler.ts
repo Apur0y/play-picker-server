@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as SportsService from "../sports/sports.service";
-import fetch from "node-fetch";
 
 export const createSports = async (req: Request, res: Response) => {
   try {
@@ -42,6 +41,7 @@ export const getYouTubeVideos = async (req: Request, res: Response) => {
 
     const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`;
 
+    const { default: fetch } = await import("node-fetch");
     const response = await fetch(url);
     const data: any = await response.json();
 

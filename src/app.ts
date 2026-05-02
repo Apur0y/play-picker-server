@@ -10,12 +10,12 @@ import { globalErrorHandler } from "./app/middlewares/globalErrorHandler";
 
 
 export const app=express();
-app.use(express.json());
-app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://playpicker.vercel.app'], // Allow all origins for development, restrict in production
+  origin: ['http://localhost:3000', 'https://playpicker.vercel.app'], 
   credentials: true // Allow cookies to be sent
 }))
+app.use(express.json());
+app.use(cookieParser());
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
