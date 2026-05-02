@@ -13,7 +13,7 @@ export const app=express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: true, // Allow all origins for development, restrict in production
+  origin: ['http://localhost:3000', 'https://playpicker.vercel.app'], // Allow all origins for development, restrict in production
   credentials: true // Allow cookies to be sent
 }))
 
