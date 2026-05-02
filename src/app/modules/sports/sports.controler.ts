@@ -37,24 +37,24 @@ export const getAllSports = async (_req: Request, res: Response) => {
 export const getYouTubeVideos = async (req: Request, res: Response) => {
   try {
     const API_KEY = process.env.YOUTUBE_API_KEY;
-    const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID; 
+    const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
 
     const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`;
 
-    const { default: fetch } = await import("node-fetch");
     const response = await fetch(url);
     const data: any = await response.json();
+      console.log("Ther you",data);
 
     const videos = data.items
-      .filter((item: any) => item.id.kind === "youtube#video")
+      ?.filter((item: any) => item.id.kind === "youtube#video")
       .map((item: any) => {
         const title = item.snippet.title;
-        const firstWord = title.split(" ")[0]; // take the first word
+        const firstWord = title.split(" ")[0];
 
         return {
           id: item.id.videoId,
-          title: title,
-          type: firstWord,                   // <-- new field
+          title,
+          type: firstWord,
           description: item.snippet.description,
           thumbnail: item.snippet.thumbnails.high.url,
           publishedAt: item.snippet.publishedAt,
@@ -62,20 +62,24 @@ export const getYouTubeVideos = async (req: Request, res: Response) => {
           src: `https://www.youtube.com/embed/${item.id.videoId}`,
         };
       });
+      console.log("Ther you",videos);
 
     res.status(200).json({
       success: true,
       data: videos,
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error(error);
+
     res.status(500).json({
       success: false,
       message: "Failed to fetch YouTube videos",
-      error,
+      error: {
+        message: error.message,
+      },
     });
   }
 };
-
 export const getSingleSports = async (req: Request, res: Response) => {
   try {
     const result = await SportsService.getSingleSports(req.params.id);
